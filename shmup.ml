@@ -145,6 +145,9 @@ let min_repulsion = 100.;;
 let min_bounce = 1000.;;
 
 (*Param�tres des ast�ro�des*)
+
+let asteroid_min_health = 50.;; (*�vite les ast�ro�des trop fragiles � cause d'une masse trop faible. S'additionne au calcul.*)
+let asteroid_mass_health = 0.01;;(*Sert � d�terminer la vie d'un ast�ro�de bas� sur sa masse*)
 let asteroid_max_spawn_radius = 650. ;;(*Taille max d'ast�ro�de au spawn.*)
 let asteroid_min_spawn_radius = 350. ;;(*Taille min de spawn*)
 let asteroid_max_moment = 1.;; (*Rotation max d'un ast�ro�de au spawn (dans un sens al�atoire)*)
@@ -152,8 +155,6 @@ let asteroid_max_velocity = 2000.;; (*Velocit� max au spawn*)
 let asteroid_min_velocity = 1500. ;;(*Velocit� min au spawn*)
 let asteroid_stage_velocity = 500. ;;(*Permet aux ast�ro�des de stages plus avanc�s d'aller plus vite*)
 let asteroid_density = 1.;; (*Sert � d�terminer la masse d'un ast�ro�de en se basant sur sa surface*)
-let asteroid_min_health = 50.;; (*�vite les ast�ro�des trop fragiles � cause d'une masse trop faible. S'additionne au calcul.*)
-let asteroid_mass_health = 0.01;;(*Sert � d�terminer la vie d'un ast�ro�de bas� sur sa masse*)
 (*Dam : dommmages. phys : dommages physiques. Ratio : Multiplicateur du d�gat. res : r�sistance aux d�gats (soustraction)*)
 let asteroid_dam_ratio = 1. ;;(*La sensibilit� aux d�gats d'explosions*)
 let asteroid_dam_res = 0.;; (*La r�sistance aux d�gats d'explosions*)
@@ -191,13 +192,12 @@ let chunk_max_size = 50.;;
 let chunks = ref true;;
 let chunk_radius_decay = 25.;; (*Pour la d�croissance des particules n'ayant pas de collisions*)
 
-
+let chunks_explo_max_speed = 20000.;;
+let chunk_explo_radius_decay = 500.;;
 let nb_chunks_explo = 15;;
 let chunks_explo_min_radius = 150.;;
 let chunks_explo_max_radius = 300.;;
 let chunks_explo_min_speed = 10000.;;
-let chunks_explo_max_speed = 20000.;;
-let chunk_explo_radius_decay = 500.;;
 
 (*Param�tres du vaisseau*)
 (*Pour l'autoregen*)
