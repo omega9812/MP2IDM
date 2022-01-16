@@ -20,10 +20,10 @@ let game_speed_target_pause = 0. ;; (*Vitesse du jeu en pause*)
 let game_speed_target_death = 0.8 ;;(*Vitesse du jeu apres mort*)
 let game_speed_target_boucle = 1.;; (*Vitesse du jeu par defaut*)
 let game_speed_target = ref 1.;;
-(*Le game_speed est la vitesse reelle � laquelle le jeu tourne � l'heure actuelle.*)
-(*Cela permet notamment de faire des effets de ralenti ou d'acc�l�r�*)
+(*Le game_speed est la vitesse reelle a laquelle le jeu tourne a l'heure actuelle.*)
+(*Cela permet notamment de faire des effets de ralenti ou d'accalere*)
 let game_speed = ref 1.;;
-(*Le half_speed_change d�termine � quelle �vitesse� le game speed se rapproche de game_speed_target (En demi-vie) *)
+(*Le half_speed_change determine a quelle vitesse le game speed se rapproche de game_speed_target (En demi-vie) *)
 let half_speed_change = 0.1;;
 
 (*Ratios de changement de vitesse en fonction des �v�nements*)
@@ -75,17 +75,6 @@ On conserve au passage le ratio de la r�solution pour les dimensions de jeu
 On a une surface de jeu de 1 000 000 par d�faut*)
 let projectile_number_default = 1;;
 
-
-(*Effet de scanlines pour imiter les moniteurs crt qui projetait l'image ligne par ligne.*)
-(*Activer l'effet animated_scanlines permet l'animation imitant les vid�os interlac�es,
-en activant une ligne sur deux une image sur deux, mais il passe mal
-� cause du raffraichissement de l'image ne pouvant pas vraiment �tre
-� 60 pile avec le moteur d'ocaml. Testez � vos risques et p�rils*)
-(*let scanlines = ref false;;
-let scanlines_period = 5;;
-let animated_scanlines = true;;
-let scanlines_offset = ref 0;;*)
-
 (*L'antialiasing de jitter fait �trembler� l'espace de rendu.
 C'est une forme de dithering spatial
 afin de compenser la perte de pr�cision due � la rast�risation
@@ -116,7 +105,7 @@ let height_collision_table = 9;;
 (******************************************************************************)
 (*Param�tres graphiques avanc�s*)
 
-(*Coleurs random par stage*)
+(*Coleurs random par etape*)
 let rand_min_lum = 0.5;;
 let rand_max_lum = 1.5;;
 let space_saturation = 2.;;
@@ -142,7 +131,6 @@ let shutter_speed = 1.;;
 
 (*Les contr�les directs ne contr�lent pas la vitesse et le moment mais directement la position et la rotation.
 Les valeurs par d�faut sont celles demand�es dans le tp*)
-(*TODO impl�menter correctement toutes les m�thodes de contr�le*)
 let ship_direct_pos = ref false;;
 let ship_direct_rotat = ref false;;
 let ship_impulse_pos = ref true;;
@@ -265,7 +253,6 @@ let shotgun_deviation = 0.3;;
 let shotgun_radius = 15.;;
 let shotgun_radius_hitbox = 50.;;
 let shotgun_number = 50;;
-
 let oldschool = ref false;;
 let retro = ref false;;
 
@@ -315,17 +302,6 @@ let star_rand_lum = 2.;; (*Effet de scintillement des �toiles*)
 let stars_nb_default = 100;;
 let stars_nb = ref 200;;
 let stars_nb_previous = ref 200;;
-
-
-(*Effet de scanlines pour imiter les moniteurs crt qui projetait l'image ligne par ligne.*)
-(*Activer l'effet animated_scanlines permet l'animation imitant les vid�os interlac�es,
-en activant une ligne sur deux une image sur deux, mais il passe mal
-� cause du raffraichissement de l'image ne pouvant pas vraiment �tre
-� 60 pile avec le moteur d'ocaml. Testez � vos risques et p�rils*)
-let scanlines = ref false;;
-let scanlines_period = 5;;
-let animated_scanlines = true;;
-let scanlines_offset = ref 0;;
 
 (*La camera predictive oriente la camera vers l'endroit o� le vaisseau va,
 pour le garder tant que possible au centre de l'�cran*)
