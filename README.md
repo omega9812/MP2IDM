@@ -1,4 +1,4 @@
-## Compilation and Launch
+## DM Schmup (shoot em up) en ocaml
 
 Projet fais en trois mois pour la MP2I de Saint-Louis, j'avais envie d'implementer un projet comme celui-ci: https://www.youtube.com/watch?v=M-4BV4A35bQ&t=775s
 mais avec plusieurs contrainte lier au module graphic de caml, je n'ai pas completement reussi.
