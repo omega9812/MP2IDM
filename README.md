@@ -14,4 +14,4 @@ Le deuxieme montre mes premiers essais avec des objects en mouvement et des dete
 Le dernier est represente donc l'accumulation des ces connaissances mis en actions. Le projet n'est pas parfait et loin d'etre terminer mais je suis quand meme tres heureux 
 du resultat.
 
-De nombreuses choses ne fonctionne pas tres bien mais ce n'est pas trop grave vu qu'on n'y vois rien
+De nombreuses choses ne fonctionnent pas tres bien mais ce n'est pas trop grave vu qu'on n'y vois rien
