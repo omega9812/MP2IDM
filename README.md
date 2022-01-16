@@ -13,3 +13,5 @@ Dans le fichier, il y a trois programme ml, le premier est une demo et represent
 Le deuxieme montre mes premiers essais avec des objects en mouvement et des detection de collision.
 Le dernier est represente donc l'accumulation des ces connaissances mis en actions. Le projet n'est pas parfait et loin d'etre terminer mais je suis quand meme tres heureux 
 du resultat.
+
+De nombreuses choses ne fonctionne pas tres bien mais ce n'est pas trop grave vu qu'on n'y vois rien
