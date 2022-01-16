@@ -1921,145 +1921,6 @@ let rec draw_n_hearts lastx n =
   draw_heart (lastx -. 0.03 *. !phys_width, 0.75 *. !phys_height) (lastx, 0.80 *. !phys_height);
   draw_n_hearts (lastx -. 0.05  *. !phys_width) (n-1));;
 
-(*Affichage de l'interface utilisateur*)
-(*let affiche_hud ref_etat =
-  let etat = !ref_etat in
-  let ship = !(etat.ref_ship) in
-  if not !retro && not !pause then (
-    (*Affichage des cœurs*)
-    draw_n_hearts (0.95 *. !phys_width) etat.lifes;
-    (*Affichage de la vie*)
-    etat.last_health <- (max 0. ship.health) +. (exp_decay (etat.last_health -. (max 0. ship.health)) 0.5 ship.proper_time);
-    set_line_width 0;
-    affiche_barre 1. [(0.95,0.9);(0.95,0.85);(0.6,0.85);(0.55,0.9)] (rgb 32 0 0);
-    affiche_barre (etat.last_health /. ship_max_health) [(0.95,0.9);(0.95,0.85);(0.6,0.85);(0.55,0.9)] (rgb 255 128 0);
-    affiche_barre ((max 0. ship.health) /. ship_max_health) [(0.95,0.9);(0.95,0.85);(0.6,0.85);(0.55,0.9)] red;
-    set_line_width buttonframewidth; set_color buttonframe;
-    draw_poly (Array.of_list (relative_poly[(0.95,0.9);(0.95,0.85);(0.6,0.85);(0.55,0.9)]));
-    (*Affichage du cooldown de téléportation*)
-    set_line_width 0;
-    affiche_barre 1. [(0.95,0.7);(0.95,0.65);(0.8,0.65);(0.75,0.7)] (rgb 0 0 32);
-    affiche_barre ((cooldown_tp -. (max 0. etat.cooldown_tp)) /. cooldown_tp) [(0.95,0.7);(0.95,0.65);(0.8,0.65);(0.75,0.7)] (rgb 0 192 255);
-    set_line_width buttonframewidth; set_color buttonframe;
-    draw_poly (Array.of_list (relative_poly[(0.95,0.7);(0.95,0.65);(0.8,0.65);(0.75,0.7)]));
-    if etat.cooldown_tp <= 0. then (
-      set_line_width 0;
-      set_color (rgb 0 192 255);
-      render_char
-      [(0.7  *. !phys_width,0.65 *. !phys_height);
-       (0.72 *. !phys_width,0.65 *. !phys_height);
-       (0.72 *. !phys_width,0.7  *. !phys_height);
-       (0.7  *. !phys_width,0.7  *. !phys_height)]
-        'F');
-    (*Affichage du cooldown de l'arme*)
-    set_line_width 0;
-    affiche_barre 1. [(0.95,0.6);(0.95,0.55);(0.9,0.55);(0.85,0.6)] (rgb 32 16 0);
-    affiche_barre (max 0.((!projectile_cooldown -. (max 0. etat.cooldown)) /. !projectile_cooldown))[(0.95,0.6);(0.95,0.55);(0.9,0.55);(0.85,0.6)] yellow;
-    set_line_width buttonframewidth; set_color buttonframe;
-    draw_poly (Array.of_list (relative_poly[(0.95,0.6);(0.95,0.55);(0.9,0.55);(0.85,0.6)]));
-    (*Affichage du score*)
-    set_color (rgb_of_hdr (intensify {r=50000.;v=1000.;b=300.} (1. /. (1. +. 10. *. !shake_score))));
-    set_line_width 0;
-    render_string ("SCORE " ^ string_of_int etat.score) (*(string_of_int etat.score)*)
-      (0.02 *. !phys_width, 0.82 *. !phys_height *. (1. -. (0.05 *. !shake_score *.0.08)))
-      ((1. +. 0.05 *. !shake_score) *.0.03 *. !phys_width)
-      ((1. +. 0.05 *. !shake_score) *.0.08 *. !phys_height)
-      ((1. +. 0.05 *. !shake_score) *.0.01 *. !phys_width) (!shake_score *. 7.);
-    (*Affichage du niveau de difficulté*)
-    set_color white ; set_line_width 0;
-    render_string ("STAGE " ^ (string_of_int etat.stage))
-      (0.02 *. !phys_width, 0.7 *. !phys_height)
-      (0.02 *. !phys_width) (0.05 *. !phys_height) (0.01 *. !phys_width)
-      0.;
-
-    let time_until_explo = !time_of_death +. time_stay_dead_max -. (Unix.gettimeofday()) in
-    if (ship.health<=0. && time_until_explo > 0. && time_until_explo -. (float_of_int (int_of_float time_until_explo)) > 0.5) then
-    render_string (string_of_int(int_of_float(time_until_explo +. 1.)))
-      (0.42 *. !phys_width, 0.3 *. !phys_height)
-      (0.16 *. !phys_width) (0.4 *. !phys_height) (0.01 *. !phys_width)
-      0.;
-
-    set_color white;
-
-    let nb_objets = List.length etat.ref_objets + List.length etat.ref_objets_oos
-    and nb_toosmall = List.length etat.ref_toosmall + List.length etat.ref_toosmall_oos
-    and nb_frags = List.length etat.ref_fragments
-    and nb_impacteurs = List.length etat.ref_projectiles + List.length etat.ref_explosions + 1 (*Le vaisseau*)
-    in
-    let nb_potential_impacts = (nb_objets+nb_toosmall+nb_frags)*nb_impacteurs + ((nb_objets-1)*nb_objets)/2 + ((nb_frags-1)*nb_frags)/2 + nb_objets * nb_toosmall
-    in
-    moveto 20 400;
-    draw_string("Potential collisions : " ^ string_of_int nb_potential_impacts);
-
-    moveto 20 380;
-    draw_string("Collisions checked   : " ^ string_of_int (!nb_collision_checked));
-
-    let taux_verif = if nb_potential_impacts == 0 then 1. else (float_of_int !nb_collision_checked) /.(float_of_int nb_potential_impacts) in
-    let begx = 20. /. (float_of_int width) and begy = 360. /. (float_of_int height)
-    and endx = 150. /. (float_of_int width) and endy = 370. /. (float_of_int height) in
-    affiche_barre 1. [(begx,begy);(begx,endy);(endx,endy);(endx,begy)] (rgb 0 255 0);
-    if taux_verif > 1. then (
-    affiche_barre taux_verif [(begx,begy);(begx,endy);(endx,endy);(endx,begy)] (rgb 255 0 0);
-    affiche_barre 1. [(begx,begy);(begx,endy);(endx,endy);(endx,begy)] (rgb 128 128 128)
-    )else(
-    affiche_barre 1. [(begx,begy);(begx,endy);(endx,endy);(endx,begy)] (rgb 0 255 0);
-    affiche_barre taux_verif [(begx,begy);(begx,endy);(endx,endy);(endx,begy)] (rgb 128 128 128));
-    set_color white;
-
-    (*moveto 20 260;
-    draw_string ("Objets :       " ^ string_of_int nb_objets);
-    moveto 20 240;
-    draw_string ("TooSmall :     " ^ string_of_int nb_toosmall);
-    moveto 20 220;
-    draw_string ("frags        : " ^ string_of_int (List.length etat.ref_fragments));
-    moveto 20 160;
-    draw_string ("Chunks explo : " ^ string_of_int (List.length etat.ref_chunks_explo));
-    moveto 20 140;
-    draw_string ("Projectiles :  " ^ string_of_int (List.length etat.ref_projectiles));
-    moveto 20 120;
-    draw_string ("Explosions :   " ^ string_of_int (List.length etat.ref_explosions));
-
-    moveto 20 100;
-    draw_string ("Deco : " ^ string_of_int (List.length etat.ref_chunks + List.length etat.ref_smoke));
-    moveto 20 80;
-    draw_string ("Chunks : " ^ string_of_int (List.length etat.ref_chunks));
-    moveto 20 60;
-    draw_string ("Smoke : " ^ string_of_int (List.length etat.ref_smoke)));
-
-    (*Affichage du framerate en bas à gauche.*)
-    moveto 20 20;
-    draw_string ("Framerate : " ^ string_of_int !last_count);*)
-
-  if !scanlines then (
-    if animated_scanlines then
-      (render_scanlines (0 + !scanlines_offset);scanlines_offset := (!scanlines_offset + 1) mod  scanlines_period)
-    else
-      render_scanlines 0);
-
-  if !pause then (
-   set_color black ; set_line_width 1000;
-    render_string ("INFO")
-      ((2.1/.16.) *. !phys_width, (14.7/.24.) *. !phys_height)
-      ((1./.16.) *. !phys_width) (4. /. 24. *. !phys_height) ((1. /. 40.)*. !phys_width)
-      0.;
-   List.iter applique_button !ref_etat.buttons;
-   set_color white ; set_line_width 0;
-   render_string ("INFO")
-      ((2./.16.) *. !phys_width, (15./.24.) *. !phys_height)
-      ((1./.16.) *. !phys_width) (4. /. 24. *. !phys_height) ((1. /. 40.)*. !phys_width)
-      0.;
-  );
-
-  (*Calcul du framerate toutes les secondes*)
-  if (!time_current_count -. !time_last_count > 1.) then (
-    last_count := !current_count;
-    current_count := 0;
-    time_last_count := !time_current_count;);
-  time_current_count := Unix.gettimeofday ();
-  current_count := !current_count + 1;;*)
-
-
-
 let affiche_etat ref_etat =
    let temptime = Unix.gettimeofday() in
    let etat = !ref_etat in
@@ -2127,8 +1988,6 @@ let affiche_etat ref_etat =
   List.iter render_objet etat.ref_toosmall;
   List.iter render_objet etat.ref_objets;
   List.iter render_objet etat.ref_explosions;
-
-  (*affiche_hud ref_etat;*)
   synchronize ();;
 
 
@@ -2237,8 +2096,6 @@ let etat_suivant ref_etat =
    etat.ref_smoke     <- List.filter checkspawn_objet   (etat.ref_smoke @ etat.ref_smoke_oos);
    etat.ref_smoke_oos <-(List.filter checknotspawn_objet etat.ref_smoke_oos) @ togoout_smoke ;
 
-   (*print_endline("trans deco :  " ^ string_of_float (1000. *. (Unix.gettimeofday()-.temptime)) ^ " ms");*)
-
 if not !pause then (
    let temptime = Unix.gettimeofday() in
    let objets_ref   = etat.ref_objets @ etat.ref_objets_oos
@@ -2256,7 +2113,6 @@ if not !pause then (
    rev_filtertable toosmall_ref collision_table_toosmall;
    rev_filtertable other_ref    collision_table_other;
    rev_filtertable etat.ref_fragments collision_table_frag;
-   (*print_endline("constru :     " ^ string_of_float (1000. *. (Unix.gettimeofday()-.temptime)) ^ " ms");*)
 
    let temptime = Unix.gettimeofday() in
    calculate_collision_tables collision_table collision_table true;
@@ -2266,7 +2122,6 @@ if not !pause then (
    (* calculate_collision_tables collision_table_other collision_table_frag true; *)
    calculate_collision_tables collision_table_other collision_table_toosmall true;
    calculate_collision_tables collision_table_other collision_table_frag true;
-   (*print_endline("coll all :    " ^ string_of_float (1000. *. (Unix.gettimeofday()-.temptime)) ^ " ms");*)
 
    (*On fait apparaitre les fragments des astéroïdes détruits*)
    etat.ref_fragments <- spawn_n_frags etat.ref_objets etat.ref_fragments fragment_number;
@@ -2284,7 +2139,7 @@ if not !pause then (
    + List.length (List.filter is_dead etat.ref_fragments)
    in
    game_speed := !game_speed *. ratio_time_destr_asteroid ** (float_of_int nb_destroyed);
-   etat.score <- etat.score + nb_destroyed; (*TODO meilleure version du score avec multiplicateurs*)
+   etat.score <- etat.score + nb_destroyed;
    shake_score := (abso_exp_decay !shake_score shake_score_half_life) +. shake_score_ratio *. (float_of_int nb_destroyed);
 
    if !chunks then etat.ref_chunks <- (etat.ref_chunks @ (List.filter ischunk etat.ref_fragments));
@@ -2528,10 +2383,6 @@ let rec mort ref_etat =
   game_screenshake := !game_screenshake +. screenshake_death;
   if !flashes then add_color := hdr_add !add_color (intensify {r = 1000. ; v = 0. ; b = 0. } flashes_death);
   !ref_etat.ref_ship <- ref (spawn_ship ());
-  (* not sure
-  teleport ref_etat;
-  (!ref_etat).cooldown_tp <- 0.;
-  *)
   game_speed_target := game_speed_target_boucle;
   game_exposure_target := game_exposure_target_boucle));;
 
