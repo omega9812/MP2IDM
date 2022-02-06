@@ -1242,10 +1242,7 @@ let frag_asteroid ref_asteroid =
 
 let init_etat () =  game_screenshake:=0. ;{
   buttons =
-    [ button_quit ; button_resume ; button_new_game;
-     (*button_scanlines ; button_retro ;
-     button_hitbox ; button_smoke ; button_screenshake ;
-     button_flashes ; button_chunks ; button_color*)];
+    [ button_quit ; button_resume ; button_new_game];
   lifes = ship_max_lives;
   score = 0;
   stage = 0;
@@ -1892,14 +1889,6 @@ let rec list_car charac = match charac with
 let render_string str pos l_char h_char l_space shake= (render_characs (list_car str) pos l_char h_char l_space shake);;
 
 
-(*L'effet de scanlines a pour but d'imiter les anciens écrans CRT,
-qui projetaient l'image ligne par ligne.*)
-let rec render_scanlines nb=
-  set_color black;
-  if nb < height then (
-  moveto 0 nb;
-  lineto width nb;
-  render_scanlines (nb + scanlines_period));;
 
 (*Rendu de cœur*)
 let draw_heart (x0,y0) (x1,y1) =
@@ -1977,7 +1966,7 @@ let affiche_etat ref_etat =
   if !retro then set_color black else set_color (rgb_of_hdr (intensify !space_color !game_exposure));
   fill_rect 0 ~-1 width height;
 
-  if not !retro then (set_line_width 2; List.iter render_star_trail etat.ref_stars);(*Avec ou sans motion blur, on rend les étoiles comme il faut*)
+  if not !retro then (set_line_width 2; List.iter _star_trail etat.ref_stars);(*Avec ou sans motion blur, on rend les étoiles comme il faut*)
   set_line_width 0;
 
   List.iter render_objet etat.ref_smoke;
